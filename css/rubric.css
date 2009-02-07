@@ -1,0 +1,22 @@
+body {
+font-family: Verdana,Arial,sans-serif;
+font-size: 62.5%;
+}
+.rangeheader, .criteria {
+	background: #0865A5;
+	border: 1px solid #77d5f7;
+	font-weight: bold;
+	color: #FFF;
+}
+.rangeheader {
+	text-align: center;
+}
+table {
+border-collapse: collapse;
+}
+td {
+	border: 1px solid #77d5f7;
+	padding: 1px;
+	margin: 0px;
+	font-size: 1.2em;
+}
