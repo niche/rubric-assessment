@@ -1,7 +1,11 @@
 <?php
+$db = new coreapp;
+//$db->authenticate();
+//$db->debug($_SESSION);
 function __autoload($class_name) {
     require_once "classes/class.".$class_name . '.php';
 }
+$rubrics = $db->select("select rubrics.name, rubrics.id from rubrics where first_marker_id = 'smusim'");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -19,56 +23,12 @@ function __autoload($class_name) {
 <link rel="stylesheet" type="text/css" href="css/rubric.css" />
 <link rel="stylesheet" type="text/css" href="theme/ui.theme.css" />
 <link rel="stylesheet" type="text/css" href="theme/ui.core.css" />
-<link rel="stylesheet" type="text/css" href="theme/ui.buttons.css" />
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<script type="text/javascript" src="js/ui.core.min.js"></script>
-<script type="text/javascript" src="js/jquery.form.js"></script>
-<script type="text/javascript" src="js/rubric.js"></script>
-</head>
-
 <body>
+<h1>My Rubrics</h1>
 <?php
-$db = new coreapp;
-$rubric = $db->select("select rubrics.name, rubrics.id from rubrics where rubrics.id = '".$_GET['rubric']."'");
-$criterias = $db->select("select criterias.description, criterias.fail, criterias.third, criterias.twotwo, criterias.twoone, criterias.first from criterias where criterias.rubric_id = '".$_GET['rubric']."'");
-//$db->debug($rubric);
-?>
-<h1><?php echo $rubric[0]['name']?></h1>
-<h2 id="studentname"></h2>
-<button id="rubricsubmit" class="fg-button ui-state-disabled ui-corner-all" type="submit">Submit</button>
-<table width="100%" id="rubric">
-  <tr>
-    <td style="border-width: 0 1px 1px 0; background: 0" class="header"></td>
-    <td class="header range"><p>Fail</p></td>
-    <td class="header range"><p>3rd</p></td>
-    <td class="header range"><p>2.2</p></td>
-    <td class="header range"><p>2.1</p></td>
-    <td class="header range"><p>1st</p></td>
-  </tr>
-  <?php
-  $x = 1;
-  foreach ($criterias as $row) {
-	echo "<tr id='selectable'>";
-	echo "<td class='header'>".$row['description']."</td>";
-	echo "<td class='crit".$x."' id='1'>".$row['fail']."</td>";
-	echo "<td class='crit".$x."' id='2'>".$row['third']."</td>";
-	echo "<td class='crit".$x."' id='3'>".$row['twotwo']."</td>";
-	echo "<td class='crit".$x."' id='4'>".$row['twoone']."</td>";
-	echo "<td class='crit".$x."' id='5'>".$row['first']."</td>";
-	echo "<tr>";
-	$x++;
-  }
-  ?>
-</table>
-<form id="form1" name="score" method="post" action="submitrubric.php">
-<?php
-for ($y = 1; $y < $x; $y++){
-	echo "<input class='score' type='hidden' id='crit".$y."' name='crit".$y."'>";
+foreach($rubrics as $rubric){
+	echo "<p><a href='rubric.php?rubric=".$rubric['id']."'>".$rubric['name']."</a></p>";
 }
 ?>
-<input class='score' type='hidden' id='rubric_id' name='rubric_id' value='<?php echo $_GET["rubric"]?>'>
-<label>Comments:</label>
-<textarea id="comments" class="ui-state-default" style="background:white; color: black" width: "100%"></textarea>
-</form>
 </body>
 </html>

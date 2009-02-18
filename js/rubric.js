@@ -1,7 +1,10 @@
+var total = 0;
+var count = 0;
+var students;
 function checkready(){
 	var complete = 0;
 	var total = 0;
-	$("input:hidden").each(function () {
+	$("input.score").each(function () {
 		if ($(this).val() != ""){
 			complete++;
 		}
@@ -10,13 +13,36 @@ function checkready(){
 	if (total == complete){
 		$("button#rubricsubmit").removeClass("ui-state-disabled");
 		$("button#rubricsubmit").addClass("ui-state-default");
+		$("button#rubricsubmit").removeAttr("disabled");
+		$("#rubricsubmit").click(function(){
+			$("#rubricsubmit").attr("disabled", "disabled");
+			$("button#rubricsubmit").addClass("ui-state-disabled");
+			$("button#rubricsubmit").removeClass("ui-state-default");
+			$('#rubric_form').ajaxForm(function() { 
+	            next();
+	        }); 
+		});
 	}
 }
 function reset(){
-	$("input:hidden + not:(#rubric_id)").each(function () {//selects all hidden inputs except for the rubric id one which should stay the same
+	$("input.score").each(function () {//selects all hidden inputs except for the rubric id one which should stay the same
 		$(this).val("");
 	});
 	$("#comments").val("");
+	$("td.selected").removeClass("selected");
+}
+function next(){
+	reset();
+	if (count != total){
+		count++;
+		$("table#rubric").fadeOut("fast");
+		$("#student_id").val(students[count].student_id);
+		$("#studentname").html(students[count].firstname+" "+students[count].surname);
+		$("#count").html(count+1+"/"+total);
+		$("table#rubric").fadeIn("fast");
+	} else {
+		alert("You have come to the end of the set");
+	}
 }
 jQuery.fn.log = function (msg) {
 		console.log("%s: %o", msg, this);
@@ -25,12 +51,13 @@ jQuery.fn.log = function (msg) {
 	};
 $(document).ready(function(){
 	reset();
-	var total = 0;
-	var count = 0;
 	$.getJSON("getstudents.php?rubric="+$("#rubric_id").val(),function(data){
 		//$.fn.log(data[count].firstname);
-		$.fn.log($(data).length);
-		$("#studentname").html(data[count].firstname+" "+data[count].surname);
+		total = $(data).length;
+		students = data;
+		$("#student_id").val(students[count].student_id);
+		$("#studentname").html(students[count].firstname+" "+students[count].surname);
+		$("#count").html(count+1+"/"+total);
 	});
 	$("td:not(.header)").click(function(){//all table cells except the headers (includes the critereas)
 		$("td."+$(this).attr("class")).removeClass("selected");//removes any other selected boxes
@@ -46,12 +73,4 @@ $(document).ready(function(){
 		$(this).removeClass("ui-state-hover"); 
 	}
 	)
-	$("#rubricsubmit").click(function(){
-		/*	- Submit data
-			- Save data
-			- reset all values
-			- change student name
-		*/
-		document.score.submit();
-	})
 });

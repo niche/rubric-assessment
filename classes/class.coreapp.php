@@ -30,16 +30,9 @@ class coreapp {
 		  die ("Not authorized, contact <a href='mailto:i.mcnaught@hud.ac.uk'>Ian McNaught</a> for access");
 		  exit;
 		} 
-		$user=mysql_fetch_array($registered_user);
+		$user=mysql_fetch_assoc($registered_user);
 		session_start();
-		switch($user['dept']) {
-			case 'smus': 	$school = "MUSIC & HUMANITIES";
-							break;
-			case 'sdes':	$school = "DESIGN TECHNOLOGY";
-							break;
-		}
-		$_SESSION['school'] = $school;
-		$_SESSION['access'] = $user['accesslevel'];
+		$_SESSION['user'] = "smusim";
 	}
 	
 	function debug($variable){
@@ -69,8 +62,6 @@ class coreapp {
 	
 	function select($query){
 		$this->db_connect();
-		$this->debug($query);
-		//if ($querystatus=mysql_query($this->sql_safe($query))){ //removed the sqlsafe for the sake of selects, perhaps need to seperate write and read sql into different functions?
 		if ($querystatus=mysql_query($query)){
 		}else{
 			echo("Query <b>$query</b> unsuccessful");
@@ -80,18 +71,23 @@ class coreapp {
 			echo("<br><br>");
 		}
 		$x = 0;	
-		while ($responserow=mysql_fetch_assoc($querystatus)){
-			$result_array[$x] = $responserow;
-			$x++;		
+		if (mysql_num_rows($querystatus) != 0){
+			while ($responserow=mysql_fetch_assoc($querystatus)){
+				$result_array[$x] = $responserow;
+				$x++;		
+			}
 		}
 		if (isset($result_array)) {
 			return $result_array;
+		} else {
+			return false;
 		}
 	}
 
-	function save($query){
+	function updateinsert($query){
 		$this->db_connect();
-		if ($querystatus=mysql_query($this->sql_safe($query))){
+		if ($querystatus=mysql_query($query)){
+			return true;
 		}else{
 			echo("Query <b>$query</b> unsuccessful");
 			echo(mysql_errno());
