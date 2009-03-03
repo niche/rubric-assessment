@@ -14,11 +14,15 @@ function checkready(){
 		$("button#rubricsubmit").removeClass("ui-state-disabled");
 		$("button#rubricsubmit").addClass("ui-state-default");
 		$("button#rubricsubmit").removeAttr("disabled");
-		$("#rubricsubmit").click(function(){
+		$("#rubricsubmit").click(function(){									
 			$("#rubricsubmit").attr("disabled", "disabled");
 			$("button#rubricsubmit").addClass("ui-state-disabled");
 			$("button#rubricsubmit").removeClass("ui-state-default");
-			$('#rubric_form').ajaxForm(function() { 
+			$("button#rubricsubmit").html("Saving...");
+			$("#studentname").html("<img src='ajax-loader.gif' alt='Loading...' />&nbsp;Saving...");
+			$("div#rubric_area").hide("fast");
+			$('#rubric_form').ajaxSubmit(function() { 
+				//$.fn.log("saved it")
 	            next();
 	        }); 
 		});
@@ -28,18 +32,19 @@ function reset(){
 	$("input.score").each(function () {//selects all hidden inputs except for the rubric id one which should stay the same
 		$(this).val("");
 	});
+	$("#rubricsubmit").unbind();
 	$("#comments").val("");
 	$("td.selected").removeClass("selected");
+	$("button#rubricsubmit").html("Submit");
 }
 function next(){
-	reset();
 	if (count != total){
 		count++;
-		$("table#rubric").fadeOut("fast");
+		$("div#rubric_area").show("fast");
 		$("#student_id").val(students[count].student_id);
 		$("#studentname").html(students[count].firstname+" "+students[count].surname);
 		$("#count").html(count+1+"/"+total);
-		$("table#rubric").fadeIn("fast");
+		reset();
 	} else {
 		alert("You have come to the end of the set");
 	}
@@ -58,6 +63,8 @@ $(document).ready(function(){
 		$("#student_id").val(students[count].student_id);
 		$("#studentname").html(students[count].firstname+" "+students[count].surname);
 		$("#count").html(count+1+"/"+total);
+		$("div#rubric_area").show("fast");
+		//$('#rubric_form').ajaxForm();
 	});
 	$("td:not(.header)").click(function(){//all table cells except the headers (includes the critereas)
 		$("td."+$(this).attr("class")).removeClass("selected");//removes any other selected boxes

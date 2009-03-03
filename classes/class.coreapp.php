@@ -32,7 +32,7 @@ class coreapp {
 		} 
 		$user=mysql_fetch_assoc($registered_user);
 		session_start();
-		$_SESSION['user'] = "smusim";
+		$_SESSION['user'] = $user;
 	}
 	
 	function debug($variable){

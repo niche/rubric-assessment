@@ -1,7 +1,6 @@
 <?php
 $db = new coreapp;
-//$db->authenticate();
-//$db->debug($_SESSION);
+$db->authenticate();
 function __autoload($class_name) {
     require_once "classes/class.".$class_name . '.php';
 }

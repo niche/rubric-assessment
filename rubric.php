@@ -39,10 +39,11 @@ where criterias.rubric_id = ".$_GET['rubric']);
 //$db->debug($rubric);
 ?>
 <h1><?php echo $rubric[0]['name']?></h1>
-<h2 id="studentname"></h2>
+<h2 id="studentname"><img src="ajax-loader.gif" alt="Loading..." />&nbsp;Loading Students</h2>
 <span id="count" style="position: absolute; top: 0; right: 4px; font-size: 3em; font-weight: bold;"></span>
-<form id="rubric_form" name="score" method="post" action="submitrubric.php">
-<button id="rubricsubmit" class="fg-button ui-state-disabled ui-corner-all" disabled>Submit</button>
+<div id="rubric_area" style="display:none">
+<form id="rubric_form" name="rubricscore" method="post" action="submitrubric.php">
+<button id="rubricsubmit" onclick="return false" class="fg-button ui-state-disabled ui-corner-all" disabled>Submit</button>
 <table width="100%" id="rubric">
   <tr>
     <td style="border-width: 0 1px 1px 0; background: 0" class="header"></td>
@@ -68,9 +69,10 @@ where criterias.rubric_id = ".$_GET['rubric']);
   ?>
 </table>
 <input type='hidden' id='rubric_id' name='rubric[rubric_id]' value='<?php echo $_GET["rubric"]?>'>
-<input class='score' type='hidden' id='student_id' name='rubric[student_id]'>
+<input type='hidden' id='student_id' name='rubric[student_id]'>
 <label>Comments:</label>
 <textarea id="comments" name="rubric[comments]" class="ui-state-default" style="background:white; color: black" width: "100%"></textarea>
 </form>
+</div>
 </body>
 </html>
